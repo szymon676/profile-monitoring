@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        document.querySelector("form").onsubmit = (event) => {
+          event.preventDefault(); 
+
+          const username = document.querySelector("#username").value;
+          const url = `http://localhost:1337/${username}`;
+
+          fetch(url)
+            .then((response) => response.text()) // parse response as text
+            .then((text) => {
+              const followersMatch = text.match(/Followers: (\d+)/);
+              const followingMatch = text.match(/Following: (\d+)/);
+
+              const followers = followersMatch
+                ? parseInt(followersMatch[1])
+                : 0;
+              const following = followingMatch
+                ? parseInt(followingMatch[1])
+                : 0;
+
+            
+              document.querySelector("#user").innerHTML = username
+              document.querySelector("#followers").innerHTML = "Followers: " + followers
+              document.querySelector("#following").innerHTML = "Following: " + following
+              const resetUsername = document.querySelector("#username").value = "";
+            })
+            .catch((error) => console.error(error));
+        };
+      });
+    </script>
+  </head>
+  <body >
+    <h1 style="font-size: 3rem; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">Github Tracker</h1>
+    <form >
+      <div>
+        <input type="text" id="username" placeholder="username" style="font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; font-size: 2rem;"/>
+      </div>
+      <div>
+        <button type="submit" style="padding: 0.5rem; border-radius: 0.3rem; font-size: large; font-weight: bold; margin-top: 1rem;">Submit</button>
+      </div>
+    </form>
+    <div style="font-size: large; font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">
+        <h2 id="user" class="text-white"></h2>
+        <h4 id="followers"></h4>
+        <h4 id="following"></h4>
+    </div>
+  </body>
+</html>
